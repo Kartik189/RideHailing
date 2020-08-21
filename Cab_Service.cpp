@@ -1,0 +1,633 @@
+#include<fstream>                      //using GNU GCC Compiler
+#include<iostream>
+#include<stdio.h>
+#include<string.h>
+#include<conio.h>
+#include<stdlib.h>
+#include<windows.h>
+
+
+using namespace std ;
+COORD coord = {0, 0};
+void gotoxy(int x, int y)
+{
+    coord.X = x;
+    coord.Y = y;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
+void id_generator(int &idg);
+class driver
+{
+    char dname[100] ;
+    char car_type[50] , rc_no[100] , car_no[50] , car_name[50] , area_operation[100] , pool[2] , phone_no[100] ;
+    int salary , dage , d_id , no_of_seats_av , no_of_trips , book ;
+    float rev;
+public:
+    void in_details(int &id)
+    {
+        id_generator(id);
+        cout << " Driver Id Generated :: " << id << endl;
+        d_id = id;
+        cout << " Enter Name :: ";
+        cin >> dname;
+        cout << " Enter Age :: ";
+        cin >> dage;
+        cout << " Enter Phone_no :: ";
+        cin >> phone_no;
+        cout << " Enter Car Type ::(Mini/Sedan/Luxury/SUV) ";
+        cin >> car_type;
+        if ((strcmpi(car_type, "mini") == 0) || (strcmpi(car_type, "Sedan") == 0) || (strcmpi(car_type, "Luxury") == 0))
+            no_of_seats_av = 4;
+        else if (strcmpi(car_type, "SUV") == 0)
+            no_of_seats_av = 7;
+        cout << " Available For Pool ::(Y/N) ";
+        cin >> pool;
+        if (strcmpi(pool, "y") == 0)
+        {
+            cout << " No Of Seats Available ";
+            cin >> no_of_seats_av;
+        }
+        cout << " Enter Car Name :: ";
+        cin >> car_name;
+        cout << " Enter Car Number :: ";
+        cin >> car_no;
+        cout << " Area Of Operation :: ";
+        cin >> area_operation;
+        cout << " Enter RC Number :: ";
+        cin >> rc_no;
+        cal_sal();
+        rev = 5;
+        no_of_trips = 0;
+        book = 0;
+    }
+    void book_d()
+    {
+        book = 1;
+    }
+    void unbook_d()
+    {
+        book = 0;
+    }
+    void rating_setter()
+    {
+        int temp;
+        no_of_trips++;
+        cout << " GIVE YOUR RATING(1-10) :: ";
+        cin >> temp;
+        rev = ((no_of_trips - 1) * rev + temp) / no_of_trips;
+    }
+    void arop_setter( char ar_op[] )
+    {
+        strcpy(area_operation, ar_op);
+    }
+    void show_details()
+    {
+        cout << " Driver ID :: " << d_id << endl;
+        cout << " Driver Name :: " << dname << endl;
+        cout << " Driver Age :: " << dage << endl;
+        cout << " Phone Number :: " << phone_no << endl;
+        cout << " Car Type :: " << car_type << endl;
+        cout << " Car Name :: " << car_name << endl;
+        cout << " Car Number :: " << car_no << endl;
+        cout << " Area Of Operation :: " << area_operation << endl;
+        cout << " RC Number :: " << rc_no << endl;
+        cout << " Pool Availability :: " << pool << endl;
+        cout << " Salary :: " << salary << " /month " << endl;
+        cout << " Star Rating :: " << rev << "/10" << endl;
+        if (book == 1)
+            cout << " Booked ";
+        else if (book == 0)
+            cout << " Not Booked ";
+    }
+    void mod_details()
+    {
+        cout << " Driver ID To Be Modified :: " << d_id << endl;
+        cout << " Enter Name :: ";
+        cin >> dname;
+        cout << " Enter Age :: ";
+        cin >> dage;
+        cout << " Enter Phone_no :: ";
+        cin >> phone_no;
+        cout << " Enter Car Type ::(Mini/Sedan/Luxury/SUV) ";
+        cin >> car_type;
+        cout << " Available For Pool ::(Y/N) ";
+        cin >> pool;
+        cout << " Enter Car Name :: ";
+        cin >> car_name;
+        cout << " Enter Car Number :: ";
+        cin >> car_no;
+        cout << " Area Of Operation :: ";
+        cin >> area_operation;
+        cout << " Enter RC Number :: ";
+        cin >> rc_no;
+    }
+    void cal_sal()
+    {
+        if (strcmpi(car_type, "mini") == 0)
+            salary = 100000;
+        else if (strcmpi(car_type, "sedan") == 0)
+            salary = 150000;
+        else if (strcmpi(car_type, "SUV") == 0)
+            salary = 200000;
+        else if (strcmpi(car_type, "luxury") == 0)
+            salary = 300000;
+        else cout << " Paid According To No. Of Trips " << endl;
+    }
+    int ret_id()
+    {
+        return (d_id);
+    }
+    char* ret_ar_op()
+    {
+        return area_operation ;
+    }
+    char* ret_car_type()
+    {
+        return car_type;
+    }
+    char* ret_pool()
+    {
+        return pool;
+    }
+    int ret_seats()
+    {
+        return no_of_seats_av;
+    }
+    int ret_book()
+    {
+        return book ;
+    }
+} d;
+fstream file;
+
+void id_generator(int &idg)
+{
+    fstream file1;
+    file1.open("driver.dat", ios::in | ios::binary);
+    while (file1.read((char*)&d, sizeof(d)))
+    {
+        if (d.ret_id() == idg)
+        {
+            idg++;
+        }
+    }
+}
+
+class customer
+{
+    char cus_name[100] , pool[2] , to[100] , from[100] , car_type[10] ;
+    int no_of_seats , price , cus_id;
+public:
+    void get_details(int &id )
+    {
+        cout << " Your Trip ID IS " << id << endl;
+        cus_id = id;
+        cout << " NAME :: ";
+        cin >> cus_name;
+        cout << " Where From :: ";
+        cin >> from;
+        cout << " Where To :: ";
+        cin >> to;
+        cout << " Car Type Preffered(Mini/Sedan/SUV/Luxury) :: ";
+        cin >> car_type;
+        cout << " Pool('Y'/'N') :: ";
+        cin >> pool;
+        cout << " No Of Passengers Travelling ";
+        cin >> no_of_seats;
+        price_cal();
+    }
+    void pf_details()
+    {
+        cout << cus_name << " Travelling From " << from << " To " << to << " via " << car_type << " Car " << endl;
+        cout << " Travelling With " << no_of_seats << " Others " << endl;
+        cout << " Trip Costs :: " << price << " /KM/PERSON " << endl;
+        cout << " **WAITING CHARGES NOT INCLUDED** " << endl;
+    }
+    void price_cal()
+    {
+        if (strcmpi(car_type, "mini") == 0)
+            price = 10;
+        else if (strcmpi(car_type, "sedan") == 0)
+            price = 15;
+        else if (strcmpi(car_type, "SUV") == 0)
+            price = 20;
+        else if (strcmpi(car_type, "luxury") == 0)
+            price = 30;
+        if (strcmpi(pool, "y") == 0)
+            price = price - 0.75 * price;
+    }
+    int retcus_id()
+    {
+        return cus_id;
+    }
+    char* ret_from()
+    {
+        return from;
+    }
+    char* ret_car_type()
+    {
+        return car_type;
+    }
+    char* ret_pool()
+    {
+        return pool;
+    }
+    int ret_seats()
+    {
+        return no_of_seats;
+    }
+    char* ret_to()
+    {
+        return to ;
+    }
+} c;
+
+void driver();
+void customer();
+void password();
+void add_new()
+{
+    system("cls");
+    int x;
+    file.open("driver.dat", ios::app | ios::binary);
+    file.seekp(0, ios::end);
+    x = file.tellp() / sizeof(d);
+    x++;
+    d.in_details(x);
+    file.write((char*)&d, sizeof(d));
+    file.close();
+}
+
+void remove()
+{
+    system("cls");
+    int id ;
+    fstream fin , fout ;
+    fin.open("driver.dat", ios::in | ios::binary);
+    fout.open("xdriver.dat", ios::out | ios::binary);
+    cout << " Enter ID Of Record To Be Deleted :: ";
+    cin >> id;
+    while (fin.read((char*)&d, sizeof(d)))
+    {
+        if (d.ret_id() != id)
+        {
+            fout.write((char*)&d, sizeof(d));
+        }
+        else
+        {
+            system("cls");
+            gotoxy(30, 0);
+            cout << " **DETAILS OF DRIVER REMOVED** " << endl;
+            d.show_details();
+        }
+    }
+    fin.close();
+    fout.close();
+    remove("driver.dat");
+    rename("xdriver.dat", "driver.dat");
+    getch();
+}
+
+void show()
+{
+    system("cls");
+    int choice , id;
+    file.open("driver.dat", ios::in | ios::binary);
+    cout << " 1. SINGLE Record " << endl;
+    cout << " 2. ALL Records " << endl;
+    cout << " Enter Your Choice :: ";
+    cin >> choice;
+    if (choice == 1)
+    {
+        cout << " Enter Driver ID :: ";
+        cin >> id;
+    }
+    system("cls");
+    while (file.read((char*)&d, sizeof(d)))
+    {
+        if (choice == 1)
+        {
+            if (d.ret_id() == id)
+            {
+                system("cls");
+                gotoxy(30, 0);
+                cout << " DETAILS OF DRIVER " << endl;
+                d.show_details();
+            }
+        }
+        else if (choice == 2)
+        {
+            d.show_details();
+            cout << endl;
+        }
+    }
+    file.close();
+    getch();
+}
+
+void modify()
+{
+    system("cls");
+    int id;
+    file.open("driver.dat", ios::in | ios::app | ios::binary);
+    cout << " Enter Driver ID To Be Modified :: ";
+    cin >> id;
+    while (file.read((char*)&d, sizeof(d)))
+    {
+        if (d.ret_id() == id)
+            d.mod_details();
+        file.seekp(-1 * sizeof(d), ios::cur);
+        file.write((char*)&d, sizeof(d));
+    }
+    file.close();
+    getch();
+}
+
+void driver()
+{
+start:
+    system("cls");
+    int choice;
+    char wish;
+    gotoxy(25, 0);
+    cout << " #-WELCOME TO CAB_BUDDY$ WORKSPACE-# " << endl;
+    gotoxy(35, 1);
+    cout << " #OPERATIONS# " << endl;
+    cout << " 1. Add New Driver " << endl;
+    cout << " 2. Remove Driver " << endl;
+    cout << " 3. Modify Driver Information " << endl;
+    cout << " 4. Show Drivers " << endl;
+    cout << " 5. Move To Customer Menu " << endl;
+    cout << " You'd Like To Continue With ? ";
+    cin >> choice;
+    if (choice == 1)
+        add_new();
+    else if (choice == 2)
+        remove();
+    else if (choice == 3)
+        modify();
+    else if (choice == 4)
+        show();
+    else if (choice == 5)
+    {
+        customer();
+        return ;
+    }
+    else cout << " Sorry Wrong Choice !! ";
+    system("cls");
+    gotoxy(25, 0);
+    cout << " WISH TO PERFORM MORE OPERATIONS(Y/N) :: ";
+    cin >> wish;
+    if ((wish == 'y') || (wish == 'Y'))
+        goto start;
+    else
+    {
+        system("cls");
+        gotoxy(35, 0);
+        cout << " #! GOODBYE !# ";
+        gotoxy(35, 1);
+        cout << " SEE YOU SOON ";
+    }
+}
+void password()
+{
+    char pass[10];
+    cout << " Enter Password :: ";
+    cin >> pass;
+    if (strcmpi(pass, "ubervalley") == 0)
+        driver();
+    else cout << " Wrong Password ";
+}
+
+void driver_rater(int &id)
+{
+    fstream fin2 ;
+    file.open("driver.dat", ios::ate | ios::out | ios::in | ios::binary);
+    fin2.open("custom.dat", ios::in | ios::binary);
+    file.seekg(0, ios::beg);
+    while (fin2.read((char*)&c, sizeof(c)))
+    {
+        if (c.retcus_id() == id)
+        {
+            while (file.read((char*)&d, sizeof(d)))
+            {
+                if ((strcmpi(c.ret_from(), d.ret_ar_op()) == 0) && (strcmpi(c.ret_car_type(), d.ret_car_type()) == 0) && (strcmpi(c.ret_pool(), d.ret_pool()) == 0) && (c.ret_seats() <= d.ret_seats()))
+                {
+                    int x = file.tellg() / sizeof(d);
+                    d.rating_setter();
+                    d.arop_setter(c.ret_to());
+                    file.seekp((x - 1)*sizeof(d), ios::beg);
+                    file.write((char*)&d, sizeof(d));
+                    getch();
+                    return ;
+                }
+            }
+        }
+    }
+    file.close();
+    fin2.close();
+}
+
+void driver_linkerb(int & id)
+{
+    fstream fin1 , fin2 ;
+    fin1.open("driver.dat", ios::in | ios::binary);
+    fin2.open("custom.dat", ios::in | ios::binary);
+    while (fin2.read((char*)&c, sizeof(c)))
+    {
+        if (c.retcus_id() == id)
+        {
+            while (fin1.read((char*)&d, sizeof(d)))
+            {
+                if ((strcmpi(c.ret_from(), d.ret_ar_op()) == 0) && (strcmpi(c.ret_car_type(), d.ret_car_type()) == 0) && (strcmpi(c.ret_pool(), d.ret_pool()) == 0) && (c.ret_seats() <= d.ret_seats()) && (d.ret_book() == 0))
+                {
+                    int x = fin1.tellg() / sizeof(d);
+                    fin1.seekp((x - 1)*sizeof(d), ios::beg);
+                    d.book_d();
+                    fin1.write((char*)&d, sizeof(d));
+                    getch();
+                    d.show_details();
+                }
+            }
+        }
+    }
+    fin1.close();
+    fin2.close();
+}
+
+void driver_linkeru(int & id)
+{
+    fstream fin1 , fin2 ;
+    fin1.open("driver.dat", ios::in | ios::binary);
+    fin2.open("custom.dat", ios::in | ios::binary);
+    while (fin2.read((char*)&c, sizeof(c)))
+    {
+        if (c.retcus_id() == id)
+        {
+            while (fin1.read((char*)&d, sizeof(d)))
+            {
+                if ((strcmpi(c.ret_from(), d.ret_ar_op()) == 0) && (strcmpi(c.ret_car_type(), d.ret_car_type()) == 0) && (strcmpi(c.ret_pool(), d.ret_pool()) == 0) && (c.ret_seats() <= d.ret_seats()) && (d.ret_book() == 1))
+                {
+                    d.unbook_d();
+                    int x = fin1.tellg() / sizeof(d);
+                    fin1.seekp((x - 1)*sizeof(d), ios::beg);
+                    fin1.write((char*)&d, sizeof(d));
+                    getch();
+                    d.show_details();
+                    return ;
+                }
+            }
+        }
+    }
+    fin1.close();
+    fin2.close();
+}
+
+void new_trip()
+{
+    system("cls");
+    int x;
+    file.open("custom.dat", ios::app | ios::binary);
+    file.seekp(0, ios::end);
+    x = file.tellp() / sizeof(c);
+    x++;
+    cout << " Enter Details " << endl;
+    c.get_details(x);
+    file.write((char*)&c, sizeof(c));
+    file.close();
+    driver_linkerb(x);
+}
+
+void trip_info()
+{
+    system("cls");
+    int id;
+    file.open("custom.dat", ios::in | ios::binary);
+    cout << " Enter Your Trip ID :: ";
+    cin >> id;
+    while (file.read((char*)&c, sizeof(c)))
+    {
+        if (c.retcus_id() == id)
+        {
+            c.pf_details();
+            cout << endl;
+            cout << " --DRIVER DETAILS-- " << endl;
+            driver_linkerb(id);
+        }
+    }
+    file.close();
+}
+
+void cancel_trip(int & id)
+{
+    system("cls");
+    fstream fin , fout ;
+    fin.open("custom.dat", ios::in | ios::binary);
+    fout.open("xcustom.dat", ios::out | ios::binary);
+    while (fin.read((char*)&c, sizeof(c)))
+    {
+        if (c.retcus_id() != id)
+        {
+            fout.write((char*)&c, sizeof(c));
+        }
+        else
+        {
+            system("cls");
+            gotoxy(37, 0);
+            cout << " #-YOUR RECEIPT-# " << endl;
+            c.pf_details();
+            cout << endl;
+            cout << " *-DRIVER DETAILS-* ";
+            cout << endl;
+            getch();
+            driver_linkeru(id);
+        }
+    }
+    fin.close();
+    fout.close();
+    remove("custom.dat");
+    rename("xcustom.dat", "custom.dat");
+}
+
+void end_trip()
+{
+    system("cls");
+    int id;
+    cout << " Enter Your Travel ID :: ";
+    cin >> id;
+    system("cls");
+    gotoxy(28, 0);
+    cout << " THANKYOU FOR TRAVELLING WITH US " << endl;
+    cout << " PLEASE RATE OUR DRIVER " << endl;
+    driver_rater(id);
+    gotoxy(23, 4);
+    cout << " KEEN TO ACCOMPANY YOU ON YOUR NEXT TRAVEL ";
+    getch();
+    cancel_trip(id);
+}
+
+void customer()
+{
+start:
+    char wish ;
+    system("cls");
+    int choice , id;
+    gotoxy(28, 0);
+    cout << " #-WELCOME TO CAB_BUDDY$ TOURS-# " << endl;
+    gotoxy(37, 1);
+    cout << " #PREFRENCES# " << endl;
+    cout << " 1. Start A New Trip " << endl;
+    cout << " 2. Booked Trip INFO. " << endl;
+    cout << " 3. Cancel Trip " << endl;
+    cout << " 4. End Current Trip " << endl;
+    cout << " 5. Move To EMPLOYEE Zone " << endl;
+    cout << " YOU WANNA ? ";
+    cin >> choice;
+    if (choice == 1)
+        new_trip();
+    else if (choice == 2)
+        trip_info();
+    else if (choice == 3)
+    {
+        cout << " Enter Your Travel ID :: ";
+        cin >> id;
+        cancel_trip(id);
+    }
+    else if (choice == 4)
+        end_trip();
+    else if (choice == 5)
+    {
+        password();
+        return ;
+    }
+    getch();
+    system("cls");
+    gotoxy(25, 0);
+    cout << " WISH TO PERFORM MORE OPERATIONS(Y/N) :: ";
+    cin >> wish;
+    if ((wish == 'y') || (wish == 'Y'))
+        goto start;
+    else
+    {
+        system("cls");
+        gotoxy(35, 0);
+        cout << " #! GOODBYE !# ";
+        gotoxy(35, 1);
+        cout << " SEE YOU SOON ";
+    }
+}
+int main()
+{
+    char user[10];
+    gotoxy(35, 0);
+    cout << " --CAB_BUDDY.COM-- " << endl;
+    cout << " An EMPLOYEE/CUSTOMER :: ";
+    cin >> user;
+    if (strcmpi(user, "employee") == 0)
+        password();
+    else if (strcmpi(user, "customer") == 0)
+        customer();
+    else cout << " Wrong Choice . Try Again !! ";
+    return 0 ;
+}
+
